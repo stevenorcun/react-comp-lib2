@@ -1,0 +1,207 @@
+@import './variables';
+@import './colors';
+@import './mixins';
+
+.fontSmall {
+  @include font-size(12, 16, normal);
+}
+
+.fontBold {
+  font-weight: bold;
+}
+
+.colorPrimary {
+  color: $color-darkblue;
+}
+
+.colorPrimaryLight {
+  color: $color-blue;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.relative {
+  position: relative;
+}
+
+.badge {
+  background: #f53e6a;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 7px;
+  right: 10px;
+  border: 1px solid var(--app-main-color, $color-darkblue);
+  z-index: 9;
+  border-radius: 100%;
+}
+
+.textOverflowTwoLines {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.3rem 0.5rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+  background-color: #F6F6F6;
+  font-size: 14px;
+  font-weight: 500;
+
+  &.tagLight {
+    color: $color-white;
+  }
+
+  &.tagSelected {
+    border: 1px solid #D2D3D4;
+  }
+}
+
+.PrettyScroll {
+  scrollbar-color: $color-grey40 $color-white;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    @include size(6px, 6px);
+    margin-right: 0.4rem;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background-color: $color-grey40;
+    margin-right: 0.4rem;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: transparent;
+  }
+}
+
+.InvisibleScroll {
+  &::-webkit-scrollbar {
+    @include size(0px, 0px);
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: transparent;
+  }
+}
+
+.Hidden {
+  display: none;
+  visibility: hidden;
+}
+
+.Flex {
+  @include flexbox;
+
+  &.FlexAlignItemsCenter {
+    @include align-items(center);
+  }
+
+  &.FlexJustifyContentCenter {
+    @include justify-content(center);
+  }
+
+  &.FlexJustifyContentSpaceEvenly {
+    @include justify-content(space-evenly);
+  }
+
+  &.FlexJustifyContentSpaceAround {
+    @include justify-content(space-around);
+  }
+
+  &.FlexJustifyFlexStart {
+    @include justify-content(flex-start);
+  }
+
+  &.FlexJustifyFlexEnd {
+    @include justify-content(flex-end);
+  }
+
+  &.FlexDirectionColumn {
+    @include flex-direction(column);
+  }
+
+  &.FlexWrap {
+    @include flex-wrap(wrap);
+  }
+
+  &.FlexNoWrap {
+    @include flex-wrap(nowrap);
+  }
+}
+
+.UserSelectNone {
+  user-select: none;
+}
+
+.Hoverable:hover {
+  filter: brightness(50%);
+}
+
+.PointerEventsNone {
+  pointer-events: none;
+}
+
+.Rotate90 {
+  transform: rotate(90deg);
+}
+
+.Rotate180 {
+  transform: rotate(180deg);
+}
+
+.RotateMinus90 {
+  transform: rotate(-90deg);
+}
+
+.MarginAuto {
+  margin: auto;
+}
+
+.Divider {
+  border-bottom: $color-divider-grey .5px solid;
+}
+
+.NoDataMessage {
+  @include flexbox;
+  justify-content: center;
+  font-size: 14px;
+  width: 200px;
+  margin: 50px auto 0;
+  padding: 50px;
+  border-radius: 8px;
+  background: $color-grey5;
+  color: $color-grey60;
+}
+
+.Disabled {
+  pointer-events: none; // prevents hover CSS...
+  cursor: default;
+  opacity: .8;
+
+  &:hover {
+    filter: brightness(85%);
+  }
+}

@@ -1,0 +1,65 @@
+@font-face {
+  font-family: 'Noto Sans';
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: local('Noto Sans'),
+    url('/src/assets/fonts/NotoSans-Black/NotoSans-Thin.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Sans';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: local('Noto Sans'),
+    url('/src/assets/fonts/NotoSans-Black/NotoSans-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Noto Sans'),
+    url('/src/assets/fonts/NotoSans-Black/NotoSans-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Noto Sans'),
+    url('/src/assets/fonts/NotoSans-Black/NotoSans-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Noto Sans'),
+    url('/src/assets/fonts/NotoSans-Black/NotoSans-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: local('Noto Sans'),
+    url('/src/assets/fonts/NotoSans-Black/NotoSans-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Noto Sans';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: local('Noto Sans'),
+    url('/src/assets/fonts/NotoSans-Black/NotoSans-Black.ttf') format('truetype');
+}
+
+$font-primary-default: 'Noto Sans';
+$font-map-default: 'UberMove';
