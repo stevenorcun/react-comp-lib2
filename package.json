@@ -1,6 +1,6 @@
 {
   "name": "@stevenorcun/react-comp-lib2",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Common React component library",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -44,6 +44,8 @@
   ],
   "types": "dist/index.d.ts",
   "dependencies": {
-    "axios": "^1.2.2"
+    "axios": "^1.2.2",
+    "node-sass": "^8.0.0",
+    "sass": "^1.57.1"
   }
 }
