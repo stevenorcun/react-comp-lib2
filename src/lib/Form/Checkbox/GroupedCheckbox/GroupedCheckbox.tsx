@@ -1,19 +1,21 @@
-import React from 'react';
+import React from "react";
 import Checkbox, {
   CheckboxProps,
   ICheckbox,
-} from '@/lib/Form/Checkbox/Checkbox';
-import styles from './GroupedCheckbox.scss';
+} from "@/lib/Form/Checkbox/Checkbox";
+import styles from "./GroupedCheckbox.scss";
 
 export interface IGroupedCheckbox extends ICheckbox {
   group: Array<ICheckbox>;
 }
 export interface GroupedCheckboxProps
   extends IGroupedCheckbox,
-    Omit<CheckboxProps, 'onChange'> {
+    Omit<CheckboxProps, "onChange"> {
+  //@ts-ignore
   onChange: ({ id, label, checked, group }: IGroupedCheckbox) => void;
 }
 const GroupedCheckbox = ({
+  //@ts-ignore
   id,
   label,
   checked,
@@ -21,8 +23,10 @@ const GroupedCheckbox = ({
   group,
   onChange,
 }: GroupedCheckboxProps) => {
+  //@ts-ignore
   const handleAllChecked = ({ id, label, checked }: ICheckbox) => {
     onChange({
+      //@ts-ignore
       id,
       label,
       checked,
@@ -35,17 +39,21 @@ const GroupedCheckbox = ({
     let allChecked = 0;
     const newValues = group.map((curr) => {
       if (
+        //@ts-ignore
         (curr.id !== child.id && curr.checked) ||
+        //@ts-ignore
         (curr.id === child.id && child.checked)
       )
         allChecked++;
       return {
         ...curr,
+        //@ts-ignore
         checked: curr.id === child.id ? child.checked : curr.checked,
       };
     });
 
     onChange({
+      //@ts-ignore
       id,
       label,
       checked: allChecked === group.length,
@@ -57,6 +65,7 @@ const GroupedCheckbox = ({
     <>
       <Checkbox
         icon={icon}
+        //@ts-ignore
         id={id}
         label={label}
         checked={checked}
@@ -65,6 +74,7 @@ const GroupedCheckbox = ({
       <ul>
         {group.map((curr) => {
           return (
+            //@ts-ignore
             <li key={curr.id} className={styles.GroupedCheckbox}>
               <Checkbox {...curr} onChange={handleChildChecked} />
             </li>

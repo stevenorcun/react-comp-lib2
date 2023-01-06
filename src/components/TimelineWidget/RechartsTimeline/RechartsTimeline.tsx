@@ -1,25 +1,30 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 import {
-  Bar, BarChart, CartesianGrid, ReferenceArea, ResponsiveContainer, Tooltip, XAxis, YAxis,
-} from 'recharts';
-import Moment from 'react-moment';
-import moment from 'moment';
-import 'moment/locale/fr';
-import cx from 'classnames';
-import * as d3 from 'd3-scale';
-import lodash from 'lodash';
-import commons from '@/assets/scss/_commons.scss';
-import {
-  DAY, HOUR, MINUTE, MONTH, SECOND, YEAR,
-} from '@/constants/date';
-import IconDate from '@/assets/images/icons/Dates';
-import IconArrowDown from '@/assets/images/icons/IconArrowDown';
-import IconEllipsisH from '@/assets/images/icons/IconToolEllipsisH';
-import { unhandle } from '@/utils/DOM';
-import DateTimePicker from '@/lib/DateTimePicker/DateTimePicker';
-import { NovaEntityType } from '@/API/DataModels/Database/NovaEntityEnum';
-import { CanImplementTimelineState } from '@/store/shared/timeline';
-import styles from './RechartsTimeline.scss';
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ReferenceArea,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import Moment from "react-moment";
+import moment from "moment";
+import "moment/locale/fr";
+import cx from "classnames";
+import * as d3 from "d3-scale";
+import lodash from "lodash";
+import commons from "@/assets/scss/_commons.scss";
+import { DAY, HOUR, MINUTE, MONTH, SECOND, YEAR } from "@/constants/date";
+import IconDate from "@/assets/images/icons/Dates";
+import IconArrowDown from "@/assets/images/icons/IconArrowDown";
+import IconEllipsisH from "@/assets/images/icons/IconToolEllipsisH";
+import { unhandle } from "@/utils/DOM";
+import DateTimePicker from "@/lib/DateTimePicker/DateTimePicker";
+import { NovaEntityType } from "@/API/DataModels/Database/NovaEntityEnum";
+import { CanImplementTimelineState } from "@/store/shared/timeline";
+import styles from "./RechartsTimeline.scss";
 
 export interface ChartMouseEvent {
   activeCoordinate: {
@@ -44,13 +49,12 @@ interface DateTimeRechartsData {
   timestamp: number;
 }
 
-export type RechartsTimelineData = DateTimeRechartsData &
-{
+export type RechartsTimelineData = DateTimeRechartsData & {
   [key in NovaEntityType]: [
     {
       parentId: string;
       eventId: string;
-    },
+    }
   ];
 };
 
@@ -64,10 +68,14 @@ export interface RechartsTimelineProps {
   height?: number;
   startDateTimeline?: number;
   endDateTimeline?: number;
-  timelineLeftSelectionProps: CanImplementTimelineState['timelineLeftSelectionProps'];
-  timelineRightSelectionProps: CanImplementTimelineState['timelineRightSelectionProps'];
-  setTimelineLeftSelectionProps: (left: CanImplementTimelineState['timelineLeftSelectionProps']) => void;
-  setTimelineRightSelectionProps: (left: CanImplementTimelineState['timelineRightSelectionProps']) => void;
+  timelineLeftSelectionProps: CanImplementTimelineState["timelineLeftSelectionProps"];
+  timelineRightSelectionProps: CanImplementTimelineState["timelineRightSelectionProps"];
+  setTimelineLeftSelectionProps: (
+    left: CanImplementTimelineState["timelineLeftSelectionProps"]
+  ) => void;
+  setTimelineRightSelectionProps: (
+    left: CanImplementTimelineState["timelineRightSelectionProps"]
+  ) => void;
   onDomainChange?: (extremes: [number, number]) => void;
   onDataSelect?: (data: RechartsTimelineData[]) => void;
 }
@@ -93,22 +101,22 @@ const RechartsTimeline = ({
   // TODO à revoir ? il faut garder l'état de la timeline dans un store (zoom, sélection, etc...)
   //  mais à changer si la Timeline du Graphe n'est pas la même que celle de la Map
   const [xMin, setXMin] = useState<number>(
-    data.length ? data[0][xKey] : -Infinity,
+    data.length ? data[0][xKey] : -Infinity
   );
   const [xMax, setXMax] = useState<number>(
-    data.length ? data[data.length - 1][xKey] : Infinity,
+    data.length ? data[data.length - 1][xKey] : Infinity
   );
 
   const [yKeysAsArray, setYKeysAsArray] = useState<string[]>([]);
   const [xTicks, setXTicks] = useState<number[]>([]);
-  const [dateFormatX, setDateFormatX] = useState('DD/MM');
+  const [dateFormatX, setDateFormatX] = useState("DD/MM");
 
   const [idealBarSize, setIdealBarSize] = useState(DEFAULT_BARSIZE);
 
   const [isOpenDate, setIsOpenDate] = useState(false);
 
   const [formattedData, setFormattedData] = useState<RechartsTimelineData[]>(
-    [],
+    []
   );
 
   const [isDragging, setIsDragging] = useState(false);
@@ -118,21 +126,21 @@ const RechartsTimeline = ({
 
   const handleDataSelect = () => {
     if (
-      timelineLeftSelectionProps
-      && timelineRightSelectionProps
-      && onDataSelect
+      timelineLeftSelectionProps &&
+      timelineRightSelectionProps &&
+      onDataSelect
     ) {
       onDataSelect(
         formattedData.slice(
           Math.min(
             timelineLeftSelectionProps.activeTooltipIndex,
-            timelineRightSelectionProps.activeTooltipIndex,
+            timelineRightSelectionProps.activeTooltipIndex
           ),
           Math.max(
             timelineLeftSelectionProps.activeTooltipIndex,
-            timelineRightSelectionProps.activeTooltipIndex,
-          ) + 1,
-        ),
+            timelineRightSelectionProps.activeTooltipIndex
+          ) + 1
+        )
       );
     }
   };
@@ -140,14 +148,14 @@ const RechartsTimeline = ({
   const handleSelectionUpdate = (e: any, isMouseUp?: boolean) => {
     if (e.activeLabel) {
       if (
-        isMouseUp
-        && timelineLeftSelectionProps
-        && e.activeLabel <= timelineLeftSelectionProps.activeLabel
+        isMouseUp &&
+        timelineLeftSelectionProps &&
+        e.activeLabel <= timelineLeftSelectionProps.activeLabel
       ) {
         const swapLeft = { ...timelineLeftSelectionProps };
-        (setTimelineRightSelectionProps(swapLeft));
-        (setTimelineLeftSelectionProps(e));
-      } else (setTimelineRightSelectionProps(e));
+        setTimelineRightSelectionProps(swapLeft);
+        setTimelineLeftSelectionProps(e);
+      } else setTimelineRightSelectionProps(e);
 
       if (isMouseUp) handleDataSelect();
     }
@@ -162,9 +170,9 @@ const RechartsTimeline = ({
   const computeGranularityAndXLabelFormat = (
     arr: DateTimeRechartsData[],
     min: number,
-    max: number,
+    max: number
   ) => {
-    let xLabelFormat = 'DD/MM';
+    let xLabelFormat = "DD/MM";
     let granularity = 1;
     if (arr.length === 1) return { xLabelFormat, granularity };
 
@@ -173,33 +181,33 @@ const RechartsTimeline = ({
     if (!delta) return { xLabelFormat, granularity };
 
     if (delta >= 5 * YEAR) {
-      xLabelFormat = 'YYYY';
+      xLabelFormat = "YYYY";
       granularity = 7 * DAY;
     } else if (delta >= YEAR) {
-      xLabelFormat = 'DD/MM/YYYY';
+      xLabelFormat = "DD/MM/YYYY";
       granularity = DAY;
     } else if (delta >= 6 * MONTH) {
-      xLabelFormat = 'DD/MM';
+      xLabelFormat = "DD/MM";
       granularity = HOUR;
     } else if (delta >= 7 * DAY) {
-      xLabelFormat = 'DD/MM'; // TODO 'DD' unless over different months
+      xLabelFormat = "DD/MM"; // TODO 'DD' unless over different months
       granularity = 30 * MINUTE;
     } else if (delta >= 2 * DAY) {
-      xLabelFormat = 'D-HH:mm';
+      xLabelFormat = "D-HH:mm";
       granularity = 15 * MINUTE;
     } else if (delta >= DAY) {
-      xLabelFormat = 'HH:mm';
+      xLabelFormat = "HH:mm";
       granularity = 5 * MINUTE;
     } else if (delta >= HOUR) {
-      xLabelFormat = 'HH:mm:ss';
+      xLabelFormat = "HH:mm:ss";
       granularity = MINUTE;
     } else if (delta >= MINUTE) {
-      xLabelFormat = 'mm:ss';
+      xLabelFormat = "mm:ss";
       granularity = 5 * SECOND;
     } else if (delta >= SECOND) {
-      xLabelFormat = 'ss.SSS';
+      xLabelFormat = "ss.SSS";
       granularity = SECOND / 2;
-    } else xLabelFormat = 'SSS[ms]';
+    } else xLabelFormat = "SSS[ms]";
 
     // TODO afficher l'unité supérieur SSI xMin et xMax sont dans la même seconde/minute ?
     //  -> si on a que 7j d'écart
@@ -213,7 +221,7 @@ const RechartsTimeline = ({
       Object.keys(yKeysDetails).reduce((acc: string[], curr) => {
         if (yKeysDetails[curr].isVisible) acc.push(curr);
         return acc;
-      }, []),
+      }, [])
     );
   }, [yKeysDetails]);
 
@@ -239,7 +247,7 @@ const RechartsTimeline = ({
     if (!data || !data.length) {
       handleDomainChange(
         Date.now() - 1000 * 3600 * 24,
-        Date.now() + 1000 * 3600 * 24,
+        Date.now() + 1000 * 3600 * 24
       );
       setXTicks([]);
       return;
@@ -249,7 +257,7 @@ const RechartsTimeline = ({
     const { granularity } = computeGranularityAndXLabelFormat(
       data,
       data[0][xKey],
-      data[data.length - 1][xKey],
+      data[data.length - 1][xKey]
     );
     // setDateFormatX(xLabelFormat);
 
@@ -267,7 +275,7 @@ const RechartsTimeline = ({
             ...curr,
             [xKey]: acc[acc.length - 1][xKey],
           },
-          customMergerToConcatArrays,
+          customMergerToConcatArrays
         );
       } else acc.push(curr);
 
@@ -281,15 +289,16 @@ const RechartsTimeline = ({
     const groupedDataConfig = computeGranularityAndXLabelFormat(
       groupedData,
       groupedData[0][xKey],
-      groupedData[groupedData.length - 1][xKey],
+      groupedData[groupedData.length - 1][xKey]
     );
     setDateFormatX(groupedDataConfig.xLabelFormat);
 
     if (groupedData.length === 1) {
       // try/catch isn't needed anymore, but meh
       try {
+        //@ts-ignore
         const chartWidth = divRef.current?.current?.clientWidth;
-        if (!chartWidth) throw new Error('Min width must be 1px');
+        if (!chartWidth) throw new Error("Min width must be 1px");
         setIdealBarSize(chartWidth / 3);
       } catch (e) {
         console.error(e);
@@ -308,7 +317,7 @@ const RechartsTimeline = ({
       const dataMaxX = groupedData[groupedData.length - 1][xKey];
       const xExtremesOffset = Math.max(
         granularity,
-        0.02 * (dataMaxX - dataMinX),
+        0.02 * (dataMaxX - dataMinX)
       );
 
       const scale = d3
@@ -319,21 +328,20 @@ const RechartsTimeline = ({
         ])
         .range([0, 1])
         .nice();
+      //@ts-ignore
       const scaleTicks = scale.ticks(d3.scaleTime);
       // const scaleTicks = scale.ticks(10);
 
       // ensure we have at least 1ms difference between data min/max and ticks' min/max
       // (not the case when dataset is too small)
-      const ticksAsTimestamps = [
-        ...scaleTicks.map((d) => d.getTime()),
-      ];
+      const ticksAsTimestamps = [...scaleTicks.map((d) => d.getTime())];
 
       // reset barSize. I will be adjusted by the lib
       setIdealBarSize(DEFAULT_BARSIZE);
       setXTicks(ticksAsTimestamps);
       handleDomainChange(
         ticksAsTimestamps[0],
-        ticksAsTimestamps[ticksAsTimestamps.length - 1],
+        ticksAsTimestamps[ticksAsTimestamps.length - 1]
       );
     }
 
@@ -373,16 +381,20 @@ const RechartsTimeline = ({
     setIsDragging(false);
   };
 
-  if (!data.length) return <div className={commons.NoDataMessage}>Pas de données à afficher</div>;
+  if (!data.length)
+    return (
+      <div className={commons.NoDataMessage}>Pas de données à afficher</div>
+    );
 
   return (
     <>
       <ResponsiveContainer
         ref={divRef}
-        width={width || '100%'}
-        height={height || '100%'}
+        width={width || "100%"}
+        height={height || "100%"}
       >
         <BarChart
+          //@ts-ignore
           ref={chartRef}
           data={formattedData}
           //*
@@ -414,12 +426,14 @@ const RechartsTimeline = ({
             dataKey="timestamp"
             domain={[xMin, xMax]}
             ticks={xTicks}
+            //@ts-ignore
             tick={<TimelineDatetimeTickFormatter dateFormat={dateFormatX} />}
           />
 
           <YAxis
             interval={0}
-            tickFormatter={(y) => (y !== 0 ? y : '')}
+            tickFormatter={(y) => (y !== 0 ? y : "")}
+            //@ts-ignore
             tick={TimelineTickFormatter}
             allowDecimals={false}
             tickSize={10}
@@ -428,22 +442,24 @@ const RechartsTimeline = ({
           />
 
           <Tooltip
-            cursor={{ fill: 'transparent' }}
+            cursor={{ fill: "transparent" }}
             offset={0}
             // cursor={false}
             // cursor={{ stroke: 'red', strokeWidth: 2 }}
             filterNull={false}
-            content={(
+            content={
+              //@ts-ignore
               <CustomTooltip
                 yKeysDetails={yKeysDetails}
                 currentX={currentPosition}
                 barSize={idealBarSize}
               />
-            )}
+            }
           />
 
           {yKeysAsArray.map((key) => (
             <Bar
+              //@ts-ignore
               ref={anyBarRef}
               isAnimationActive={false}
               key={key}
@@ -458,49 +474,44 @@ const RechartsTimeline = ({
             />
           ))}
 
-          {
-            timelineLeftSelectionProps
-            && timelineRightSelectionProps && (
-              <ReferenceArea
-                x1={timelineLeftSelectionProps.activeLabel}
-                x2={timelineRightSelectionProps.activeLabel}
-                isFront
-                shape={(
-                  <CustomSelectionArea
-                    startTime={Math.min(
-                      timelineLeftSelectionProps.activeLabel,
-                      timelineRightSelectionProps.activeLabel,
-                    )}
-                    endTime={Math.max(
-                      timelineLeftSelectionProps.activeLabel,
-                      timelineRightSelectionProps.activeLabel,
-                    )}
-                    relativeX={
-                      Math.min(
-                        timelineLeftSelectionProps.activeCoordinate
-                          .x,
-                        timelineRightSelectionProps.activeCoordinate
-                          .x,
-                      )
-                      - (anyBarRef.current?.state?.curData[0]?.width
-                        || idealBarSize)
-                      / 2
-                    }
-                    relativeWidth={
-                      Math.abs(
-                        timelineRightSelectionProps.activeCoordinate
-                          .x
-                        - timelineLeftSelectionProps.activeCoordinate
-                          .x,
-                      ) + anyBarRef.current?.state?.curData[0]?.width
-                      || idealBarSize
-                    }
-                    onDelete={handleUnselect}
-                  />
-                )}
-              />
-            )
-          }
+          {timelineLeftSelectionProps && timelineRightSelectionProps && (
+            <ReferenceArea
+              x1={timelineLeftSelectionProps.activeLabel}
+              x2={timelineRightSelectionProps.activeLabel}
+              isFront
+              shape={
+                <CustomSelectionArea
+                  startTime={Math.min(
+                    timelineLeftSelectionProps.activeLabel,
+                    timelineRightSelectionProps.activeLabel
+                  )}
+                  endTime={Math.max(
+                    timelineLeftSelectionProps.activeLabel,
+                    timelineRightSelectionProps.activeLabel
+                  )}
+                  relativeX={
+                    Math.min(
+                      timelineLeftSelectionProps.activeCoordinate.x,
+                      timelineRightSelectionProps.activeCoordinate.x
+                    ) -
+                    //@ts-ignore
+                    (anyBarRef.current?.state?.curData[0]?.width ||
+                      idealBarSize) /
+                      2
+                  }
+                  relativeWidth={
+                    Math.abs(
+                      timelineRightSelectionProps.activeCoordinate.x -
+                        timelineLeftSelectionProps.activeCoordinate.x
+                      //@ts-ignore
+                    ) + anyBarRef.current?.state?.curData[0]?.width ||
+                    idealBarSize
+                  }
+                  onDelete={handleUnselect}
+                />
+              }
+            />
+          )}
         </BarChart>
       </ResponsiveContainer>
 
@@ -513,7 +524,7 @@ const RechartsTimeline = ({
           >
             <IconDate fill="#3083F7" height={12} width={12} />
             <span>
-              {' '}
+              {" "}
               <Moment format="DD MMM YYYY" withTitle>
                 {xMin}
               </Moment>
@@ -524,23 +535,21 @@ const RechartsTimeline = ({
             </span>
             <IconArrowDown className={commons.clickable} />
           </button>
-          {
-            isOpenDate && (
-              <div className={styles.bottomNavigationLeftDate}>
-                <div onClick={unhandle}>
-                  <DateTimePicker
-                    value={[new Date(xMin), new Date(xMax)]}
-                    selectRange
-                    onChange={handleCalendarDatesChange}
-                    toggleVisibility={() => setIsOpenDate(!isOpenDate)}
-                  />
-                </div>
+          {isOpenDate && (
+            <div className={styles.bottomNavigationLeftDate}>
+              <div onClick={unhandle}>
+                <DateTimePicker
+                  value={[new Date(xMin), new Date(xMax)]}
+                  selectRange
+                  onChange={handleCalendarDatesChange}
+                  toggleVisibility={() => setIsOpenDate(!isOpenDate)}
+                />
               </div>
-            )
-          }
+            </div>
+          )}
         </div>
         <div className={styles.bottomNavigationRight}>
-          {' '}
+          {" "}
           <div>
             <span className={styles.bottomNavigationRightZoomNumber}>100%</span>
             <IconArrowDown className={commons.clickable} />
@@ -582,11 +591,7 @@ const BarWithMinWidth = ({
   />
 );
 
-const TimelineTickFormatter = ({
-  x,
-  y,
-  payload,
-}) => {
+const TimelineTickFormatter = ({ x, y, payload }) => {
   if (!payload || !payload.value) return null;
 
   return (
@@ -598,12 +603,7 @@ const TimelineTickFormatter = ({
   );
 };
 
-const TimelineDatetimeTickFormatter = ({
-  dateFormat,
-  x,
-  y,
-  payload,
-}) => {
+const TimelineDatetimeTickFormatter = ({ dateFormat, x, y, payload }) => {
   if (!payload || !payload.value) return null;
 
   return (
@@ -652,16 +652,16 @@ const CustomSelectionArea = ({
         fontWeight="bold"
         x={3}
         y="1.5em"
-        style={{ userSelect: 'none' }}
+        style={{ userSelect: "none" }}
       >
-        {moment(new Date(startTime)).format('DD MMM')}
+        {moment(new Date(startTime)).format("DD MMM")}
         &nbsp;-&nbsp;
-        {moment(new Date(endTime)).format('DD MMM')}
+        {moment(new Date(endTime)).format("DD MMM")}
       </text>
     </g>
 
     <g
-      className={cx('selection-area-buttons', commons.clickable)}
+      className={cx("selection-area-buttons", commons.clickable)}
       x={relativeX - 30}
       y={5}
       transform={`translate(${relativeWidth - 30 - 20 - 5}, 5)`}
@@ -694,10 +694,10 @@ const CustomTooltip = ({
   barSize,
 }) => {
   if (
-    active
-    && currentX
+    active &&
+    currentX &&
     // only display the tooltip when the mouse this is "close" to the target (value in pixels)
-    && Math.abs(currentX - coordinate.x) <= barSize / 2
+    Math.abs(currentX - coordinate.x) <= barSize / 2
   ) {
     return (
       <div className={cx(commons.UserSelectNone, styles.CustomTooltip)}>
@@ -706,7 +706,7 @@ const CustomTooltip = ({
         </p>
         {payload.map((d, i) => {
           if (d.value !== undefined) {
-            const key = d.dataKey.slice(0, d.dataKey.indexOf('.'));
+            const key = d.dataKey.slice(0, d.dataKey.indexOf("."));
             return (
               <p key={i} style={{ color: yKeysDetails[key].color }}>
                 <b>

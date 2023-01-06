@@ -7,7 +7,7 @@ import "moment/locale/fr";
 import { EntityDto } from "@/API/DataModels/Database/NovaObject";
 import { ENTITY_TYPE_DETAILS } from "@/constants/entity-related";
 import { NovaEntityType } from "@/API/DataModels/Database/NovaEntityEnum";
-import { GraphState } from "@/store/graph";
+import { GraphState } from "@/utils/models/GraphState";
 import { CanImplementTimelineState } from "@/store/shared/timeline";
 
 import RechartsTimeline, {
@@ -152,6 +152,7 @@ const TimelineWidget = ({
   };
 
   useEffect(() => {
+    //@ts-ignore
     if (!isPinned && widgetRef) widgetRef.current.style.transform = "none";
   }, [isPinned]);
 
@@ -246,6 +247,7 @@ const TimelineWidget = ({
         ref={widgetRef}
         className={cx(styles.timeline, {
           [styles.opened]: isExpanded,
+          //@ts-ignore
           [styles.floating]: isPinned,
         })}
         style={fontStyle}

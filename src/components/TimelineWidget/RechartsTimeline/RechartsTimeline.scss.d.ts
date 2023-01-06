@@ -15,6 +15,7 @@ declare namespace RechartsTimelineScssNamespace {
     bottomNavigationRightZoomNumber: string;
     dividerVertical: string;
     toolbar: string;
+    CustomTooltip_Label: string;
   }
 }
 
